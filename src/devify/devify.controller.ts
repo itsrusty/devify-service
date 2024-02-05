@@ -6,13 +6,18 @@ import { UserDto } from './dto/user.dto';
 export class DevifyController {
   constructor(private readonly devifyService: DevifyService) {}
 
+  @Get('search/:username')
+  searchUser(@Param('username') username: string) {
+    return this.devifyService.searchUserByUsername(username);
+  }
+
   @Post()
-  getUsers(@Body() createUser: UserDto) {
-    return this.devifyService.searchUser(createUser);
+  createUser(@Body() createUser: UserDto) {
+    return this.devifyService.createUser(createUser);
   }
 
   @Get('users')
-  get() {
-    return this.devifyService.getData();
+  getUsers() {
+    return this.devifyService.getAllData();
   }
 }
