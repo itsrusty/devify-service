@@ -1,4 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserSchema } from './entities/user.entitie';
 import { Model } from 'mongoose';
@@ -6,16 +9,33 @@ import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class DevifyService {
-    // private readonly httpService: HttpService
+  // private readonly httpService: HttpService
   constructor(
     @InjectModel(UserSchema.name)
     private readonly dataModel: Model<UserSchema>,
   ) {}
 
-  searchUserByUsername(username: string) {
-    const searchUser = `https://api.github.com/users/${username}`;
+  async searchUserByUsername(username: UserDto) {
+    try {
+      const searchUser = await fetch(
+        `https://api.github.com/users/${username}`,
+      );
 
-    return searchUser;
+      const response = await searchUser.json();
+
+      let { message } = response;
+
+      if (message == 'Not Found') {
+        return {
+          errorResponse: 'user is not found',
+          statusCode: 404,
+        };
+      }
+
+      return response;
+    } catch (error) {
+      throw new InternalServerErrorException('error internal');
+    }
   }
 
   async createUser(userDto: any) {

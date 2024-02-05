@@ -7,7 +7,7 @@ export class DevifyController {
   constructor(private readonly devifyService: DevifyService) {}
 
   @Get('search/:username')
-  searchUser(@Param('username') username: string) {
+  searchUser(@Param('username') username: UserDto) {
     return this.devifyService.searchUserByUsername(username);
   }
 
