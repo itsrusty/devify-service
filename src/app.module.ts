@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { DevifyModule } from './devify/devify.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [DevifyModule, MongooseModule.forRoot(process.env.URI_DB)],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
